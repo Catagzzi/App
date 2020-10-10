@@ -1,4 +1,4 @@
-package com.example.memoria;
+package com.example.memoria.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.example.memoria.R;
 
 public class ThirdActivity extends AppCompatActivity {
 

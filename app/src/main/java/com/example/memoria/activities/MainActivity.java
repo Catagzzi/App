@@ -1,4 +1,4 @@
-package com.example.memoria;
+package com.example.memoria.activities;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,8 +11,9 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -28,12 +29,18 @@ import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.memoria.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
     private String extra = "";
     private int cellStrength = 0;
     private final int PHONE_ACCESS_CODE = 100;
+
+    private ArrayAdapter adapter;
+    private ListView listView;
+    private ArrayList<String> arrayList = new ArrayList<>();
+    private List<ScanResult> results;
+    WifiManager wifi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +79,24 @@ public class MainActivity extends AppCompatActivity {
                     WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                     int linkSpeed = wifiManager.getConnectionInfo().getRssi();
 
-
-
-
                     if (CheckPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                         if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            
                             return;
                         }
                         Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                        int frequency =  wifiInfo.getFrequency();
+                        String MAC = wifiInfo.getBSSID();
+                        intent.putExtra("frequency", frequency);
+                        intent.putExtra("MAC", MAC);
+                        // numero wifis
+
+                        wifiManager.startScan();
+                        List<ScanResult> results = wifiManager.getScanResults();
+                        int size = results.size();
+                        intent.putExtra("size", size);
+
                         // señal wifi
                         intent.putExtra("wifiSignal",linkSpeed);
                         // Wifi o Datos
@@ -122,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
                         } catch (Exception e){
                             Log.e(DEBUG_TAG, "Unable to obtain cell information", e);
+                            System.out.println(e);
                         }
 
                         startActivity(intent);
@@ -148,7 +170,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
     }
+
+
+
 
     public static String getPingResult(String a) {
         String str = "";
