@@ -19,6 +19,13 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.android.volley.toolbox.Volley;
+import com.android.volley.RequestQueue;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
 public class SecondActivity extends AppCompatActivity {
 
     private TextView textViewLatency;
@@ -68,13 +75,27 @@ public class SecondActivity extends AppCompatActivity {
                 String MAC = bundle.getString("MAC", "");
                 int frequency = bundle.getInt("frequency", 0);
                 textViewMobileSignal.setText("Intensidad: "+ RSSI+", MAC: " +MAC + ", frecuencia: " +frequency);
+                RequestQueue queue = Volley.newRequestQueue(this);
                 String url = "https://monitor.internetworking.cl/iot/?i=tel-cata&k=1234&d=Latencia:"+latency+"|Intensidad:"+String.valueOf(RSSI);
-                try {
-                    sendRequest(url);
-                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHH");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+                // Request a string response from the provided URL.
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // Display the first 500 characters of the response string.
+                                Toast.makeText(SecondActivity.this, "Response is: "+ "response.substring(0,500)", Toast.LENGTH_LONG );
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(SecondActivity.this,"That didn't work!", Toast.LENGTH_LONG );
+                    }
+                });
+
+                // Add the request to the RequestQueue.
+                queue.add(stringRequest);
+
 
             }
             if (mobile == true){
@@ -102,21 +123,6 @@ public class SecondActivity extends AppCompatActivity {
             }
         });
 
-
-    }
-    void sendRequest(String request) throws IOException {
-        // i.e.: request = "http://example.com/index.php?param1=a&param2=b&param3=c";
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        URL url = new URL(request);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setDoOutput(true);
-        connection.setInstanceFollowRedirects(false);
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Content-Type", "text/plain");
-        connection.setRequestProperty("charset", "utf-8");
-        connection.connect();
 
     }
 
