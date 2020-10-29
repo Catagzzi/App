@@ -1,5 +1,8 @@
 package com.example.memoria.models;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.RealmObject;
@@ -12,25 +15,27 @@ public class Mobile extends RealmObject {
     @Required
     private String IMEI;
     private Date createdAt;
-    private String red; //ISP
-    private String technology;
-    private int mobileRSSI;
-    private double latency;
-    private double packages; //number of loss packages
+    public String red; //ISP
+    public String technology;
+    public int mobileRSSI;
+    public double latency;
+    public String packages; //number of loss packages
+    //DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
     public Mobile(){
 
     }
 
-    public Mobile(String id){
-        this.id = "";
-        this.IMEI = "";
-        this.createdAt = new Date();
+    public Mobile(String IMEI){
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        this.IMEI = IMEI;
+        this.createdAt = Calendar.getInstance().getTime();;
+        this.id = IMEI + df.format(createdAt);
         this.red = "";
         this.technology = "";
         this.mobileRSSI = 0;
         this.latency = 0.0;
-        this.packages = 0.0;
+        this.packages = "";
     }
 
     public String getId() {
@@ -89,11 +94,11 @@ public class Mobile extends RealmObject {
         this.latency = latency;
     }
 
-    public double getPackages() {
+    public String getPackages() {
         return packages;
     }
 
-    public void setPackages(double packages) {
+    public void setPackages(String packages) {
         this.packages = packages;
     }
 }

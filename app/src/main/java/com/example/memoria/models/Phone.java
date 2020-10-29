@@ -18,7 +18,7 @@ public class Phone extends RealmObject {
     }
 
     public Phone(String IMEI){
-        this.IMEI = "";
+        this.IMEI = IMEI;
         this.WiFis = new RealmList<WiFi>();
         this.Mobiles = new RealmList<Mobile>();
     }

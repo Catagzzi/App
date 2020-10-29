@@ -3,6 +3,7 @@ package com.example.memoria.activities;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Context;
@@ -35,23 +36,39 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.memoria.R;
+import com.example.memoria.models.Mobile;
+import com.example.memoria.models.Phone;
+import com.example.memoria.models.WiFi;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+
 public class MainActivity extends AppCompatActivity {
+    private Realm realm;
 
     private static final String DEBUG_TAG = "MainActivity";
+    private static final int REQUEST_READ_PHONE_STATE = 200;
     private Button btn;
     private final String msg = "Hello from the other side";
     private double latency = 0;
     private String loss = "";
     private String extra = "";
     private int cellStrength = 0;
+    public boolean Wifi = false;
+    public boolean Mobile = false;
     private final int PHONE_ACCESS_CODE = 100;
+    public String IMEI;
+    private String MAC = "";
+    private int size = 0;
+    private int frequency = 0;
+    private int linkSpeed = 0;
+    private String technology = "";
 
     private ArrayAdapter adapter;
     private ListView listView;
@@ -63,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // DB Realm
+        realm = Realm.getDefaultInstance();
 
         btn = (Button) findViewById(R.id.buttonMain);
 
@@ -77,27 +97,44 @@ public class MainActivity extends AppCompatActivity {
                 final NetworkInfo activeNetwork = cm.getActiveNetworkInfo(); //True if network is available
                 if (activeNetwork != null) {
                     WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                    int linkSpeed = wifiManager.getConnectionInfo().getRssi();
 
-                    if (CheckPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    ///////
 
-                        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            return;
+                    int permissionCheck1 = ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
+                    int permissionCheck2 = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE);
+
+                    if (permissionCheck2 != PackageManager.PERMISSION_GRANTED && permissionCheck1 != PackageManager.PERMISSION_GRANTED) {
+                        if (!shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
+                            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+                        } else if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
+                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PHONE_ACCESS_CODE);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Please, enable the request permission", Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            i.addCategory(Intent.CATEGORY_DEFAULT);
+                            i.setData(Uri.parse("package:"+ getPackageName()));
+                            startActivity(i);
                         }
+                    } else {
+                        // intent definition
                         Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                        //frequency
                         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                         int frequency =  wifiInfo.getFrequency();
-                        String MAC = wifiInfo.getBSSID();
                         intent.putExtra("frequency", frequency);
+                        // MAC
+                        String MAC = wifiInfo.getBSSID();
                         intent.putExtra("MAC", MAC);
-                        // numero wifis
-
+                        // IMEI
+                        String IMEI = getDeviceId(MainActivity.this); // necesario enviarlo
+                        intent.putExtra("IMEI", IMEI);
+                        // number of wifis
                         wifiManager.startScan();
                         List<ScanResult> results = wifiManager.getScanResults();
-                        int size = results.size();
+                        size = results.size();
                         intent.putExtra("size", size);
-
-                        // señal wifi
+                        // wifi signal
+                        linkSpeed = wifiManager.getConnectionInfo().getRssi();
                         intent.putExtra("wifiSignal",linkSpeed);
                         // Wifi o Datos
                         Boolean Wifi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
@@ -113,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                         // Loss Package
                         loss = getPingResult("8.8.8.8");
                         intent.putExtra("loss", loss);
+                        // technology
                         try {
                             TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -133,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                                     CellInfoLte lte = (CellInfoLte) telephonyManager.getAllCellInfo().get(0);
                                     CellSignalStrengthLte cellSignalStrengthLte = lte.getCellSignalStrength();
                                     int cellStrength = cellSignalStrengthLte.getDbm();
-                                    String technology = "CDMA";
+                                    String technology = "LTE";
                                     intent.putExtra("mobileSignal", cellStrength);
                                     intent.putExtra("technology", technology);
                                 } else {
@@ -146,23 +184,18 @@ public class MainActivity extends AppCompatActivity {
                             System.out.println(e);
                         }
 
+                        // start activity
+
                         startActivity(intent);
-                    }
-                    else {
-                        if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PHONE_ACCESS_CODE);
-                        } else {
-                            Toast.makeText(MainActivity.this, "Please, enable the request permission", Toast.LENGTH_LONG).show();
-                            Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            i.addCategory(Intent.CATEGORY_DEFAULT);
-                            i.setData(Uri.parse("package:"+ getPackageName()));
-                            startActivity(i);
+
+                        // create data
+                        if (Wifi == true) {
+                            createNewWifi(IMEI, MAC, extra, size, frequency, linkSpeed, latency, loss);
+
+                        } else if (Mobile == true){
+                            createNewMobile(IMEI, extra, technology, cellStrength, latency, loss);
                         }
-
                     }
-
-
-
 
                 } else {
                     Toast.makeText(MainActivity.this, "Sin conexión a internet", Toast.LENGTH_LONG).show();
@@ -173,6 +206,43 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void createNewPhone(String IMEI){
+        realm.beginTransaction();
+        Phone phone = new Phone(IMEI);
+        realm.copyToRealm(phone);
+        realm.commitTransaction();
+    }
+
+    private void createNewWifi(String IMEI, String MAC, String red, int nets, int freq, int rssi, double lat, String pack) {
+        realm.beginTransaction();
+        WiFi wifi = new WiFi(IMEI);
+        wifi.MAC = MAC;
+        wifi.red = red;
+        wifi.wifiNets = nets;
+        wifi.frequency = freq;
+        wifi.wifiRSSI = rssi;
+        wifi.latency = lat;
+        wifi.packages = pack;
+        realm.copyToRealm(wifi);
+        realm.commitTransaction();
+    }
+
+    private void createNewMobile(String IMEI, String red, String tec, int rssi, double lat, String pack){
+        realm.beginTransaction();
+        Mobile mobile = new Mobile(IMEI);
+        mobile.red = red;
+        mobile.technology = tec;
+        mobile.mobileRSSI = rssi;
+        mobile.latency = lat;
+        mobile.packages = pack;
+        realm.copyToRealm(mobile);
+        realm.commitTransaction();
+    }
+
+    public String getDeviceId(Context context){
+        TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        return  telephonyManager.getDeviceId();
+    }
 
 
 
@@ -258,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public class MyPhoneStateListener extends PhoneStateListener {
+    /*public class MyPhoneStateListener extends PhoneStateListener {
         public int mSignalStrength;
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
@@ -268,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
             mSignalStrength = (2 * mSignalStrength) - 113; // -> dBm
         }
         
-    }
+    }*/
 
     private boolean CheckPermission(String permission){
         int result = this.checkCallingOrSelfPermission(permission);

@@ -25,8 +25,16 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.memoria.models.Phone;
+
+import com.example.memoria.models.WiFi;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class SecondActivity extends AppCompatActivity {
+
+    private Realm realm;
 
     private TextView textViewLatency;
     private TextView textViewPing;
@@ -36,11 +44,18 @@ public class SecondActivity extends AppCompatActivity {
     private TextView textViewMobileNet;
     private Button buttonNext;
 
+    private RealmResults<WiFi> wifiData;
+    private WiFi wifiDataLast;
+
     @RequiresApi(api = Build.VERSION_CODES.Q)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+
+        // DB Realm
+        realm = Realm.getDefaultInstance();
 
         textViewLatency = (TextView) findViewById(R.id.secondTextViewLatency);
         textViewPing = (TextView) findViewById(R.id.secondTextViewPing);
@@ -51,6 +66,10 @@ public class SecondActivity extends AppCompatActivity {
         buttonNext = (Button) findViewById(R.id.buttonGo);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+
+        // get data of database
+        wifiData = realm.where(WiFi.class).findAll();
+        wifiDataLast = realm.where(WiFi.class).findAll().last();
 
         //Tomar los datos del intent
         Bundle bundle = getIntent().getExtras();
@@ -125,5 +144,6 @@ public class SecondActivity extends AppCompatActivity {
 
 
     }
+
 
 }
