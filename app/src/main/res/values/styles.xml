@@ -6,5 +6,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="AppTheme.Button" parent="@style/Widget.AppCompat.Button">
+        <item name="android:textColor">@color/black</item>
+        <item name="colorButtonNormal">@color/goButton</item>
+        <item name="colorControlHighlight">@color/click</item>
+    </style>
+
 
 </resources>

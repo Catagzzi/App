@@ -18,6 +18,8 @@ import com.example.memoria.R;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.android.volley.toolbox.Volley;
 import com.android.volley.RequestQueue;
@@ -30,6 +32,7 @@ import com.example.memoria.models.Phone;
 import com.example.memoria.models.WiFi;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class SecondActivity extends AppCompatActivity {
@@ -45,6 +48,7 @@ public class SecondActivity extends AppCompatActivity {
     private Button buttonNext;
 
     private RealmResults<WiFi> wifiData;
+    private RealmResults<WiFi> wifiDataYear;
     private WiFi wifiDataLast;
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -63,13 +67,21 @@ public class SecondActivity extends AppCompatActivity {
         textViewConnection = (TextView) findViewById(R.id.secondTextViewConnection);
         textViewMobileSignal = (TextView) findViewById(R.id.secondTextViewMobileSignal);
         textViewMobileNet = (TextView) findViewById(R.id.secondTextViewNet);
-        buttonNext = (Button) findViewById(R.id.buttonGo);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
 
         // get data of database
+
+        //All
         wifiData = realm.where(WiFi.class).findAll();
+        // Last
         wifiDataLast = realm.where(WiFi.class).findAll().last();
+        // Year
+        Calendar today = Calendar.getInstance();
+        Date todayDate =  today.getTime();
+        today.add(Calendar.YEAR, -1);
+        Date lastYearDate = today.getTime();
+        wifiDataYear = realm.where(WiFi.class).between("createdAt", lastYearDate , todayDate).findAll();
 
         //Tomar los datos del intent
         Bundle bundle = getIntent().getExtras();
@@ -134,13 +146,6 @@ public class SecondActivity extends AppCompatActivity {
             Toast.makeText(SecondActivity.this, "It is empty", Toast.LENGTH_LONG);
         }
 
-        buttonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SecondActivity.this, ThirdActivity.class);
-                startActivity(intent);
-            }
-        });
 
 
     }

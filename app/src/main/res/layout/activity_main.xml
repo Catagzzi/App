@@ -9,17 +9,28 @@
     <Button
         android:id="@+id/buttonMain"
         android:layout_width="403dp"
-        android:layout_height="85dp"
+        android:layout_height="0dp"
         android:layout_marginTop="552dp"
-        android:text="@string/Button"
         android:background="@color/colorPrimary"
+        android:text="@string/Button"
         android:textColor="#FFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/buttonInstantMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="233dp"
+        android:layout_marginBottom="365dp"
+        android:text="Cortp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonMain"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

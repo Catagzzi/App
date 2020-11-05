@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String DEBUG_TAG = "MainActivity";
     private static final int REQUEST_READ_PHONE_STATE = 200;
     private Button btn;
+    private Button instantButton;
     private final String msg = "Hello from the other side";
     private double latency = 0;
     private String loss = "";
@@ -80,6 +81,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Go to instant analysis
+        instantButton = (Button) findViewById(R.id.buttonInstantMain);
+        instantButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent analysis1 = new Intent(MainActivity.this, ThirdActivity.class);
+                startActivity(analysis1);
+            }
+        });
 
         // DB Realm
         realm = Realm.getDefaultInstance();
