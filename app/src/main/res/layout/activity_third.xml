@@ -50,7 +50,7 @@
         android:backgroundTint="@color/colorAccent"
         android:ems="10"
         android:hint="Ingrese un número"
-        android:inputType="textPersonName"
+        android:inputType="phone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonPeople"
         app:layout_constraintHorizontal_bias="1.0"

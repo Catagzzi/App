@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -20,9 +21,10 @@ import com.example.memoria.R;
 
 public class ThirdActivity extends AppCompatActivity {
 
-    private ImageButton imageButtonPhone;
+    private Button buttonPeople;
     private TextView instruction;
     private TextView title;
+    private EditText Quantity;
 
     private final int PHONE_CALL_CODE = 100;
 
@@ -34,37 +36,29 @@ public class ThirdActivity extends AppCompatActivity {
         instruction.setText("Ingrese la cantidad de personas que planean usar WiFi para conectarse a Internet");
         title  = (TextView) findViewById(R.id.textViewTitleThird);
         title.setText("Análisis de Conexión");
+        buttonPeople = (Button) findViewById(R.id.buttonPeople);
+        Quantity = (EditText) findViewById(R.id.editTextPeople);
+
+
+        buttonPeople.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String quantity = Quantity.getText().toString();
+                if (quantity.matches("")){
+                    Toast.makeText(ThirdActivity.this, "No ha ingresado un valor", Toast.LENGTH_SHORT).show();
+                    return;
+                } else{
+                    Intent goPage2 = new Intent(ThirdActivity.this, UsersMeasureActivity.class);
+                    goPage2.putExtra("quantity",quantity);
+                    startActivity(goPage2);
+                }
+
+            }
+
+        });
+
+
 
     }
 
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        //Estamos en el caso del telefono
-        switch (requestCode){
-            case PHONE_CALL_CODE:
-                String permission = permissions[0];
-                int result = grantResults[0];
-                if (permission.equals(Manifest.permission.CALL_PHONE)){
-                    // Comprobar si ha sido aprobado o denegado por el usuario
-                    if (result == PackageManager.PERMISSION_GRANTED){
-                        // concedió su permiso
-                        String phoneNumber = editTextPhone.getText().toString();
-                        Intent intentCall = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
-                        startActivity(intentCall);
-                    } else {
-                        // no concedió su permiso
-                        Toast.makeText(ThirdActivity.this, "You declined de access", Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                break;
-        }
-    }*/
-
-    /*private boolean CheckPermission(String permission){
-        int result = this.checkCallingOrSelfPermission(permission);
-        return result == PackageManager.PERMISSION_GRANTED;
-    }*/
 }

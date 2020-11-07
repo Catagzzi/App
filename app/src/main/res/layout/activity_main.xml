@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="233dp"
         android:layout_marginBottom="365dp"
-        android:text="Cortp"
+        android:text="Análisis Instantáneo"
         app:layout_constraintBottom_toTopOf="@+id/buttonMain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

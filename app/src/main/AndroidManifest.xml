@@ -23,9 +23,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.UsersMeasureActivity"/>
         <activity android:name=".activities.ThirdActivity"></activity>
         <activity android:name=".activities.SecondActivity" />
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.MainActivity" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
