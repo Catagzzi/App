@@ -14,26 +14,24 @@ import com.example.memoria.adapters.ThirdPageAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsersMeasureActivity extends AppCompatActivity {
+public class FirstAnalysisActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private List<String> names;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_users_measure);
+        setContentView(R.layout.activity_analysis1);
         names = this.getAllNames();
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewNames);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewAnalysis);
         mLayoutManager = new LinearLayoutManager(this);
-        //Aquí digo que vista quiero adaptar
-        mAdapter = new ThirdPageAdapter(names, R.layout.item_page2_analysis1, new ThirdPageAdapter.OnItemClickListener() {
+        mAdapter = new ThirdPageAdapter(names, R.layout.item_page3_analysis1, new ThirdPageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String name, int position) {
-                Toast.makeText(UsersMeasureActivity.this,name + "-"+ position, Toast.LENGTH_LONG).show();
+                Toast.makeText(FirstAnalysisActivity.this,name + "-"+ position, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -51,6 +49,4 @@ public class UsersMeasureActivity extends AppCompatActivity {
             add("Dani");
         }};
     }
-
-
 }

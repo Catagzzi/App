@@ -48,7 +48,7 @@ public class ThirdActivity extends AppCompatActivity {
                     Toast.makeText(ThirdActivity.this, "No ha ingresado un valor", Toast.LENGTH_SHORT).show();
                     return;
                 } else{
-                    Intent goPage2 = new Intent(ThirdActivity.this, UsersMeasureActivity.class);
+                    Intent goPage2 = new Intent(ThirdActivity.this, FirstAnalysisActivity.class);
                     goPage2.putExtra("quantity",quantity);
                     startActivity(goPage2);
                 }

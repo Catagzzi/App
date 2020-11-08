@@ -3,7 +3,6 @@ package com.example.memoria.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,13 +12,13 @@ import com.example.memoria.R;
 
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class ThirdPageAdapter extends RecyclerView.Adapter<ThirdPageAdapter.ViewHolder> {
 
     private List<String> names;
     private int layout;
     private OnItemClickListener itemClickListener;
 
-    public MyAdapter(List<String> names, int layout, OnItemClickListener listener) {
+    public ThirdPageAdapter(List<String> names, int layout, OnItemClickListener listener) {
         this.names = names;
         this.layout = layout;
         this.itemClickListener = listener;
