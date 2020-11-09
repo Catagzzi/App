@@ -19,6 +19,9 @@ import android.widget.Toast;
 
 import com.example.memoria.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ThirdActivity extends AppCompatActivity {
 
     private Button buttonPeople;
@@ -48,8 +51,9 @@ public class ThirdActivity extends AppCompatActivity {
                     Toast.makeText(ThirdActivity.this, "No ha ingresado un valor", Toast.LENGTH_SHORT).show();
                     return;
                 } else{
-                    Intent goPage2 = new Intent(ThirdActivity.this, FirstAnalysisActivity.class);
-                    goPage2.putExtra("quantity",quantity);
+                    Intent goPage2 = new Intent(ThirdActivity.this, UsersMeasureActivity.class);
+                    List<String> users = usersList(Integer.parseInt(quantity));
+                    goPage2.putExtra("quantity", quantity);
                     startActivity(goPage2);
                 }
 
@@ -59,6 +63,14 @@ public class ThirdActivity extends AppCompatActivity {
 
 
 
+    }
+
+    public  static List<String> usersList(int quantity){
+        List<String> list = new ArrayList<>();
+        for (int i=0; i<=quantity; ++i){
+            list.add("Usuario "+ String.valueOf(i));
+        }
+        return list;
     }
 
 }
