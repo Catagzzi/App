@@ -8,17 +8,26 @@
         android:id="@+id/recyclerViewNames"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/buttonGoAnalysis" />
+        android:layout_above="@+id/botomButton" />
 
 
-    <Button
-        style="@style/AppTheme.ButtonGo"
-        android:id="@+id/buttonGoAnalysis"
-        android:layout_width="150dp"
+    <LinearLayout
+        android:id="@+id/botomButton"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_alignParentBottom="true"
-        android:text="Analizar" />
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:layout_alignParentBottom="true">
+        <Button
+            style="@style/AppTheme.ButtonGo"
+            android:id="@+id/buttonGoAnalysis"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Analizar" />
+    </LinearLayout>
+
 
 
 

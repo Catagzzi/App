@@ -23,30 +23,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SecondPageAdapter extends RecyclerView.Adapter<SecondPageAdapter.ViewHolder> {
-
     private List<String> names;
-    private int layout;
     private String[] escrito;
-    //private OnItemClickListener itemClickListener;
+    private OnItemClickListener itemClickListener;
 
-    public SecondPageAdapter(List<String> names) { //, OnItemClickListener listener
+    public SecondPageAdapter(List<String> names, OnItemClickListener listener) { //, OnItemClickListener listener
         this.names = names;
-        this.layout = layout;
         this.escrito = new String[names.size()];
-        //this.itemClickListener = listener;
+        this.itemClickListener = listener;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SecondPageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_page2_analysis1, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(names.get(position));
+    public void onBindViewHolder(@NonNull SecondPageAdapter.ViewHolder holder, int position) {
+        holder.bind(names.get(position), itemClickListener);
+
     }
 
     @Override
@@ -58,8 +56,7 @@ public class SecondPageAdapter extends RecyclerView.Adapter<SecondPageAdapter.Vi
         return escrito;
     }
 
-    //ViewHolder class
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewUsers;
         public EditText editTextUserName;
         public TextView textViewInstruction;
@@ -76,50 +73,33 @@ public class SecondPageAdapter extends RecyclerView.Adapter<SecondPageAdapter.Vi
             editTextUserName.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
                 }
-
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     escrito[getAdapterPosition()] = s.toString();
                 }
-
                 @Override
                 public void afterTextChanged(Editable s) {
-
                 }
             });
         }
 
-        public void bind(final String UserNumber){
+        public void bind(final String UserNumber, final OnItemClickListener listener){
             this.textViewUsers.setText(UserNumber);
             this.textViewInstruction.setText(" Para medir debe ponerse en la ubicación donde estará este usuario conectado y oprimir el botón 'medir'");
 
-            final List<String> namesUsers =new ArrayList<>();
             buttonMeasure.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String name = editTextUserName.getText().toString();
-                    if (TextUtils.isEmpty(name)){
-                        Toast.makeText(itemView.getContext(), "Por favor ingrese un nombre", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else {
-                        loading.setImageResource(R.drawable.waiting);
-                        buttonMeasure.setEnabled(false);
-                        namesUsers.add(name);
-
-                        loading.setImageResource(R.drawable.done);
-                    }
-
-
+                    listener.onItemClick(editTextUserName.getText().toString(), 59, loading, buttonMeasure, getAdapterPosition());
                 }
             });
         }
     }
 
 
-    //Function for click in textView
-    public interface holita{
-        void getEscrito();
+    //Function for click in button medir
+    public interface OnItemClickListener{
+        void onItemClick(String name, int throughputMax, ImageView loading, Button medir, int position); //String name, int position
     }
 }

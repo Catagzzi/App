@@ -3,4 +3,12 @@
     <string name="Nombre">EditText</string>
     <string name="Button">Button</string>
     <string name="Holita">TextView</string>
+    
+    <string-array name="services">
+        <item>Netflix</item>
+        <item>Zoom</item>
+        <item>Youtube</item>
+        <item>WhatsApp</item>
+        <item>Instagram</item>
+    </string-array>
 </resources>
