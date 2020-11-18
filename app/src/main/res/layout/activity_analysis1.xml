@@ -10,9 +10,20 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/spinnerLayout"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewAnalysis"
+    <LinearLayout
+        android:id="@+id/botomButton"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/recyclerViewSpinner"/>
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:layout_alignParentBottom="true">
+        <Button
+            style="@style/AppTheme.ButtonGo"
+            android:id="@+id/buttonAllOk"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Listo" />
+    </LinearLayout>
 </RelativeLayout>

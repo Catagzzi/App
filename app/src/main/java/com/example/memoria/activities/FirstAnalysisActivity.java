@@ -1,6 +1,10 @@
 package com.example.memoria.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -17,50 +21,40 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FirstAnalysisActivity extends AppCompatActivity {
-    private RecyclerView mRecyclerView;
     private RecyclerView recyclerSpinner;
     private List<String> names;
-    private RecyclerView.Adapter mAdapter;
     private RecyclerView.Adapter spinnerAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.LayoutManager spinnerLayoutManager;
+    private Button buttonOk;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analysis1);
-        Bundle bundle = getIntent().getExtras();
-        names = Arrays.asList(bundle.getStringArray("people")); //this.getAllNames();
+        final Bundle bundle = getIntent().getExtras();
+        final String[] lista = bundle.getStringArray("people");
+        names = Arrays.asList(lista); //this.getAllNames();
         String[] bankNames={"BOI","SBI","HDFC","PNB","OBC"};
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewAnalysis);
         recyclerSpinner = (RecyclerView) findViewById(R.id.recyclerViewSpinner);
-        mLayoutManager = new LinearLayoutManager(this);
         spinnerLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new ThirdPageAdapter(names, R.layout.item_page3_analysis1, new ThirdPageAdapter.OnItemClickListener() {
+
+        spinnerAdapter = new SpinnerAdapter(FirstAnalysisActivity.this, names, R.layout.item_spinner, bankNames);
+        recyclerSpinner.setLayoutManager(spinnerLayoutManager);
+        recyclerSpinner.setAdapter(spinnerAdapter);
+
+        buttonOk = (Button) findViewById(R.id.buttonAllOk);
+
+        buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(String name, int position) {
-                Toast.makeText(FirstAnalysisActivity.this,name + "-"+ position, Toast.LENGTH_LONG).show();
+            public void onClick(View v) {
+                Intent goPage4 = new Intent(FirstAnalysisActivity.this, FirstAnalysisActivityII.class);
+                goPage4.putExtra("finalNames", lista);
+                startActivity(goPage4);
             }
         });
 
 
-        spinnerAdapter = new SpinnerAdapter(FirstAnalysisActivity.this, names, R.layout.item_spinner, bankNames);
-        recyclerSpinner.setLayoutManager(mLayoutManager);
-        recyclerSpinner.setAdapter(spinnerAdapter);
-
-        mRecyclerView.setLayoutManager(spinnerLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-
     }
 
-    private List<String> getAllNames(){
-        return new ArrayList<String>(){{
-            add("Cata");
-            add("Jhon");
-            add("Pauli");
-            add("Deni");
-            add("Dani");
-        }};
-    }
 }

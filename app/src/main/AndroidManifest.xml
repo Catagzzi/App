@@ -23,6 +23,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.FirstAnalysisActivityII"/>
         <activity android:name=".activities.FirstAnalysisActivity"/>
         <activity android:name=".activities.UsersMeasureActivity"/>
         <activity android:name=".activities.ThirdActivity"></activity>

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.memoria.R;
 import com.example.memoria.adapters.SecondPageAdapter;
-import com.example.memoria.adapters.ThirdPageAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +27,16 @@ public class UsersMeasureActivity extends AppCompatActivity {
     public RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Button buttonFirstAnalysis;
-    private List<Integer> throughputList;
+    public List<Integer> throughputList = new ArrayList<Integer>();;
     //public ImageView loading;
+    static UsersMeasureActivity INSTANCE;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_measure);
+        INSTANCE = this;
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
@@ -47,7 +47,7 @@ public class UsersMeasureActivity extends AppCompatActivity {
             mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewNames);
             mLayoutManager = new LinearLayoutManager(this);
             //Aquí digo que vista quiero adaptar
-            throughputList = new ArrayList<Integer>();
+            //throughputList = new ArrayList<Integer>();
             mAdapter = new SecondPageAdapter(names, new SecondPageAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(String name, int throughputMax, ImageView loading, Button medir, int position) {
@@ -77,7 +77,6 @@ public class UsersMeasureActivity extends AppCompatActivity {
             buttonFirstAnalysis = (Button) findViewById(R.id.buttonGoAnalysis);
 
 
-            //SI NO HAY NOMBRES AVANZA IGUAL
             buttonFirstAnalysis.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -87,7 +86,10 @@ public class UsersMeasureActivity extends AppCompatActivity {
                         String[] escrito = ((SecondPageAdapter)mAdapter).getEscrito();
                         Intent goPage3 = new Intent(UsersMeasureActivity.this, FirstAnalysisActivity.class);
                         goPage3.putExtra("people", escrito);
+                        //Intent goLastPage = new Intent(UsersMeasureActivity.this, FirstAnalysisActivityII.class);
+                        //goLastPage.putIntegerArrayListExtra("thList", (ArrayList<Integer>) throughputList);
                         startActivity(goPage3);
+
                     }
 
 
@@ -102,6 +104,16 @@ public class UsersMeasureActivity extends AppCompatActivity {
 
 
 
+    }
+
+    public static UsersMeasureActivity getActivityInstance()
+    {
+        return INSTANCE;
+    }
+
+    public List<Integer> getData()
+    {
+        return this.throughputList;
     }
 
     private int throughputFunction(){
