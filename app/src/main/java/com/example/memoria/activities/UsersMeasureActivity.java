@@ -27,7 +27,7 @@ public class UsersMeasureActivity extends AppCompatActivity {
     public RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Button buttonFirstAnalysis;
-    public List<Integer> throughputList = new ArrayList<Integer>();;
+    public List<Integer> throughputList = new ArrayList<Integer>();
     //public ImageView loading;
     static UsersMeasureActivity INSTANCE;
 
@@ -64,7 +64,6 @@ public class UsersMeasureActivity extends AppCompatActivity {
                             medir.setText("Actualizar");
                             throughputList.add(th);
                         }
-                        Toast.makeText(UsersMeasureActivity.this,name + "-"+ th, Toast.LENGTH_LONG).show();
                         loading.setImageResource(R.drawable.done);
                     }
 
@@ -81,13 +80,11 @@ public class UsersMeasureActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (usersSize > throughputList.size()){
-                        Toast.makeText(UsersMeasureActivity.this, "Faltan usuarios por medir", Toast.LENGTH_LONG).show();
+                        Toast.makeText(UsersMeasureActivity.this, "Faltan usuarios por medir", Toast.LENGTH_SHORT).show();
                     } else {
                         String[] escrito = ((SecondPageAdapter)mAdapter).getEscrito();
                         Intent goPage3 = new Intent(UsersMeasureActivity.this, FirstAnalysisActivity.class);
                         goPage3.putExtra("people", escrito);
-                        //Intent goLastPage = new Intent(UsersMeasureActivity.this, FirstAnalysisActivityII.class);
-                        //goLastPage.putIntegerArrayListExtra("thList", (ArrayList<Integer>) throughputList);
                         startActivity(goPage3);
 
                     }
