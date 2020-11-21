@@ -96,10 +96,10 @@ public class MainActivity extends AppCompatActivity {
 
         btn = (Button) findViewById(R.id.buttonMain);
 
-        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final NetworkInfo activeNetwork = cm.getActiveNetworkInfo(); //True if network is available
+        //ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        //final NetworkInfo activeNetwork = cm.getActiveNetworkInfo(); //True if network is available
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        /*btn.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onClick(View v) {
@@ -212,11 +212,11 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
 
     }
 
-    private void createNewPhone(String IMEI){
+    /*private void createNewPhone(String IMEI){
         realm.beginTransaction();
         Phone phone = new Phone(IMEI);
         realm.copyToRealm(phone);
@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
         realm.copyToRealm(mobile);
         realm.commitTransaction();
     }
-
+*/
     public String getDeviceId(Context context){
         TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
         return  telephonyManager.getDeviceId();
@@ -337,18 +337,6 @@ public class MainActivity extends AppCompatActivity {
         return avgRtt;
     }
 
-
-    /*public class MyPhoneStateListener extends PhoneStateListener {
-        public int mSignalStrength;
-        @Override
-        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-
-            super.onSignalStrengthsChanged(signalStrength);
-            mSignalStrength = signalStrength.getGsmSignalStrength();
-            mSignalStrength = (2 * mSignalStrength) - 113; // -> dBm
-        }
-        
-    }*/
 
     private boolean CheckPermission(String permission){
         int result = this.checkCallingOrSelfPermission(permission);

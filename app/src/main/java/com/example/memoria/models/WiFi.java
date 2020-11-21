@@ -23,7 +23,7 @@ public class WiFi extends RealmObject {
     public int frequency;
     public  int wifiRSSI;
     public double latency;
-    public String packages; //number of loss packages
+    //public String packages; //number of loss packages
     //DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
     public WiFi(){
@@ -41,7 +41,7 @@ public class WiFi extends RealmObject {
         this.frequency = 0;
         this.wifiRSSI = 0;
         this.latency = 0.0;
-        this.packages = "";
+        //this.packages = "";
     }
 
     public String getId() {
@@ -116,11 +116,11 @@ public class WiFi extends RealmObject {
         this.latency = latency;
     }
 
-    public String getPackages() {
+    /*public String getPackages() {
         return packages;
     }
 
     public void setPackages(String packages) {
         this.packages = packages;
-    }
+    }*/
 }

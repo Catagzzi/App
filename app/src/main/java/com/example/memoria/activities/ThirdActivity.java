@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,15 +49,27 @@ public class ThirdActivity extends AppCompatActivity {
         buttonPeople.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String quantity = Quantity.getText().toString();
-                if (quantity.matches("")){
-                    Toast.makeText(ThirdActivity.this, "No ha ingresado un valor", Toast.LENGTH_SHORT).show();
-                    return;
-                } else{
-                    Intent goPage2 = new Intent(ThirdActivity.this, UsersMeasureActivity.class);
-                    List<String> users = usersList(Integer.parseInt(quantity));
-                    goPage2.putExtra("quantity", quantity);
-                    startActivity(goPage2);
+                ConnectivityManager cm = (ConnectivityManager) ThirdActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+                final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+                if (activeNetwork != null) {
+                    Boolean Mobile = activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
+                    if(Mobile == true) {
+                        Toast.makeText(ThirdActivity.this, "Por favor conéctese a WiFi ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        String quantity = Quantity.getText().toString();
+                        if (quantity.matches("")){
+                            Toast.makeText(ThirdActivity.this, "No ha ingresado un valor", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else{
+                            Intent goPage2 = new Intent(ThirdActivity.this, UsersMeasureActivity.class);
+                            List<String> users = usersList(Integer.parseInt(quantity));
+                            goPage2.putExtra("quantity", quantity);
+                            startActivity(goPage2);
+                        }
+                    }
+                }  else {
+                    Toast.makeText(ThirdActivity.this, "Sin conexión a internet", Toast.LENGTH_SHORT).show();
                 }
 
             }
