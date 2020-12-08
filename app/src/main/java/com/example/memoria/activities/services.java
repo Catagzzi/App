@@ -2,14 +2,14 @@ package com.example.memoria.activities;
 
 public class services {
     public String name;
-    public int throughput;
+    public double throughput;
     public int icon;
 
     public services(){
 
     }
 
-    public services(String name, int throughput, int icon) {
+    public services(String name, double throughput, int icon) {
         this.name = name;
         this.throughput = throughput;
         this.icon = icon;
@@ -23,7 +23,7 @@ public class services {
         this.name = name;
     }
 
-    public int getThroughput() {
+    public double getThroughput() {
         return throughput;
     }
 

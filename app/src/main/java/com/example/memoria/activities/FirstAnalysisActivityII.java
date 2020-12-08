@@ -23,7 +23,7 @@ public class FirstAnalysisActivityII extends AppCompatActivity {
     private List<String> names;
     private int[] positions;
     private List<services> services;
-    private List<Integer> throughputMax;
+    private List<Double> throughputMax;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -54,7 +54,7 @@ public class FirstAnalysisActivityII extends AppCompatActivity {
 
     private List<services> getAllServices(){
         return new ArrayList<services>(){{
-            add(new services("Netflix", 200, R.drawable.netflix));
+            add(new services("Netflix", 1.5, R.drawable.netflix));
             add(new services("Zoom", 1080, R.drawable.zoom));
             add(new services("Instagram", 200, R.drawable.instagram));
             add(new services("Facebook", 200, R.drawable.facebook));

@@ -1,61 +1,37 @@
 package com.example.memoria.activities;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
 import android.net.wifi.ScanResult;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.telephony.CellInfo;
-import android.telephony.CellInfoCdma;
-import android.telephony.CellInfoGsm;
-import android.telephony.CellInfoLte;
-import android.telephony.CellSignalStrengthCdma;
-import android.telephony.CellSignalStrengthGsm;
-import android.telephony.CellSignalStrengthLte;
-import android.telephony.PhoneStateListener;
-import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.memoria.R;
-import com.example.memoria.models.Mobile;
-import com.example.memoria.models.Phone;
-import com.example.memoria.models.WiFi;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
-    private Realm realm;
+    /*private Realm realm;
 
     private static final String DEBUG_TAG = "MainActivity";
     private static final int REQUEST_READ_PHONE_STATE = 200;
     private Button btn;
-    private Button instantButton;
+
     private final String msg = "Hello from the other side";
     private double latency = 0;
     private String loss = "";
@@ -75,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayList<String> arrayList = new ArrayList<>();
     private List<ScanResult> results;
-    WifiManager wifi;
+    WifiManager wifi;*/
+
+    private Button instantButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // DB Realm
-        realm = Realm.getDefaultInstance();
+        //realm = Realm.getDefaultInstance();
 
-        btn = (Button) findViewById(R.id.buttonMain);
+        //btn = (Button) findViewById(R.id.buttonMain);
 
         //ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         //final NetworkInfo activeNetwork = cm.getActiveNetworkInfo(); //True if network is available
@@ -249,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
         realm.commitTransaction();
     }
 */
-    public String getDeviceId(Context context){
+    /*public String getDeviceId(Context context){
         TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
         return  telephonyManager.getDeviceId();
     }
@@ -341,6 +319,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean CheckPermission(String permission){
         int result = this.checkCallingOrSelfPermission(permission);
         return result == PackageManager.PERMISSION_GRANTED;
-    }
+    }*/
 
 }

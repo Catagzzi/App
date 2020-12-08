@@ -50,7 +50,7 @@ public class UsersMeasureActivity extends AppCompatActivity {
     public RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Button buttonFirstAnalysis;
-    public List<Integer> throughputList = new ArrayList<Integer>();
+    public List<Double> throughputList = new ArrayList<Double>();
     //public ImageView loading;
     static UsersMeasureActivity INSTANCE;
     private Realm realm;
@@ -78,11 +78,13 @@ public class UsersMeasureActivity extends AppCompatActivity {
             mAdapter = new SecondPageAdapter(names, new SecondPageAdapter.OnItemClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
-                public void onItemClick(String name, int throughputMax, ImageView loading, Button medir, int position) {
+                public void onItemClick(String name, ImageView loading, Button medir, int position) {
                     int permissionCheck2 = ActivityCompat.checkSelfPermission(UsersMeasureActivity.this, Manifest.permission.READ_PHONE_STATE);
+                    int permissionCheck1 = ActivityCompat.checkSelfPermission(UsersMeasureActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION);
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                     if (permissionCheck2 != PackageManager.PERMISSION_GRANTED ) {
                         if (!shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
-                            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+                            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_READ_PHONE_STATE);
                         } else {
                             Toast.makeText(UsersMeasureActivity.this, "Please, enable the request permission", Toast.LENGTH_LONG).show();
                             Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -92,40 +94,44 @@ public class UsersMeasureActivity extends AppCompatActivity {
                         }
                     } else {
                         //Obtención de datos
+                        loading.setImageResource(R.drawable.waiting);
+                        wifiManager.startScan(); //Escaneo del WiFi
+                        List<ScanResult> results = wifiManager.getScanResults(); //Resultados
+                        int size =  getSize(results);// Cantidad de WiFis existentes
                         ConnectivityManager cm = (ConnectivityManager) UsersMeasureActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
                         final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                        loading.setImageResource(R.drawable.waiting);
-                        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
                         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                         int frequency =  wifiInfo.getFrequency(); //frecuencia
                         String MAC = wifiInfo.getBSSID(); //direccion MAC
                         String IMEI = getDeviceId(UsersMeasureActivity.this);
-                        wifiManager.startScan(); //Escaneo del WiFi
-                        List<ScanResult> results = wifiManager.getScanResults(); //Resultados
-                        int size = results.size(); // Cantidad de WiFis existentes
+
                         int linkSpeed = wifiManager.getConnectionInfo().getRssi();
                         String extra = activeNetwork.getExtraInfo();
                         double latency = getLatency("8.8.8.8");
+
                         createNewWifi(IMEI, MAC, extra, size, frequency, linkSpeed, latency);
-                    }
 
-                    //Función que calcula th maximo
-                    int th = throughputFunction();
+                        //Función que calcula th maximo
+                        double th = throughputFunction(linkSpeed);
 
-                    //Agregar th maximo a lista
-                    if (TextUtils.isEmpty(name)){
-                        Toast.makeText(UsersMeasureActivity.this, "Por favor ingrese un nombre", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else {
-                        if (throughputList.size() > position){
-                            // SI AGREGAN EN DISTINTO ORDEN ESTO COLAPSA
-                            throughputList.set(position, th);
-                        }else{
-                            medir.setText("Actualizar");
-                            throughputList.add(th);
+                        //Agregar th maximo a lista
+                        if (TextUtils.isEmpty(name)){
+                            Toast.makeText(UsersMeasureActivity.this, "Por favor ingrese un nombre", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else {
+                            if (throughputList.size() > position){
+                                // SI AGREGAN EN DISTINTO ORDEN ESTO COLAPSA
+                                throughputList.set(position, th);
+                            }else{
+                                medir.setText("Actualizar");
+                                throughputList.add(th);
+                            }
+                            loading.setImageResource(R.drawable.done);
                         }
-                        loading.setImageResource(R.drawable.done);
                     }
+
+
 
                 }
             });
@@ -160,26 +166,36 @@ public class UsersMeasureActivity extends AppCompatActivity {
         }
 
 
-
-
-
-
     }
+
+    public int getSize(List<ScanResult> results ){
+        int size =0;
+        for (int i=0; i<results.size(); i++ ){
+            if (results.get(i).frequency>2000 && results.get(i).frequency<3000 ){
+                size = size+1;
+            }
+        }
+        return size;
+    }
+
 
     public static UsersMeasureActivity getActivityInstance()
     {
         return INSTANCE;
     }
 
-    public List<Integer> getData()
+    public List<Double> getData()
     {
         return this.throughputList;
     }
 
-    private int throughputFunction(){
-        Random rand = new Random();
-        int throughput = rand.nextInt(1000);
-        return  throughput;
+    private double throughputFunction(int RSSI){
+        //valor en Mbps
+        double thMax = 0.3382 * RSSI + 26.5;
+        if (thMax>12){
+            thMax =12;
+        }
+        return thMax;
     }
 
 

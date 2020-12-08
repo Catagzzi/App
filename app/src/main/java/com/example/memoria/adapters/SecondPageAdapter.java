@@ -112,7 +112,7 @@ public class SecondPageAdapter extends RecyclerView.Adapter<SecondPageAdapter.Vi
             buttonMeasure.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onItemClick(editTextUserName.getText().toString(), 59, loading, buttonMeasure, getAdapterPosition());
+                    listener.onItemClick(editTextUserName.getText().toString(),  loading, buttonMeasure, getAdapterPosition());
                 }
             });
         }
@@ -121,6 +121,6 @@ public class SecondPageAdapter extends RecyclerView.Adapter<SecondPageAdapter.Vi
 
     //Function for click in button medir
     public interface OnItemClickListener{
-        void onItemClick(String name, int throughputMax, ImageView loading, Button medir, int position); //String name, int position
+        void onItemClick(String name,  ImageView loading, Button medir, int position); //String name, int position
     }
 }

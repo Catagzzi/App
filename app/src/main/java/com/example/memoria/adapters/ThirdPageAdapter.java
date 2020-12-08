@@ -22,14 +22,14 @@ public class ThirdPageAdapter extends RecyclerView.Adapter<ThirdPageAdapter.View
     private List<String> names;
     private int layout;
     private OnItemClickListener itemClickListener;
-    private List<Integer> thMax;
+    private List<Double> thMax;
     private  List<services> services;
     private int[] positions;
 
-    public ThirdPageAdapter(List<String> names, int layout, List<Integer> thMax,  List<services> services, int[] positions) {
+    public ThirdPageAdapter(List<String> names, int layout, List<Double> thMax,  List<services> services, int[] positions) {
         this.names = names;
         this.layout = layout;
-        this.thMax = thMax; //UsersMeasureActivity.getActivityInstance().getData();
+        this.thMax = thMax;
         this.services = services;
         this.positions = positions;
     }
@@ -69,7 +69,7 @@ public class ThirdPageAdapter extends RecyclerView.Adapter<ThirdPageAdapter.View
 
         }
 
-        public void bind(final String name, final int thMax,  List<services> services, int position){
+        public void bind(final String name, final double thMax,  List<services> services, int position){
             this.textViewName.setText(name);
             this.serviceName.setText(services.get(position).getName());
             this.serviceIcon.setImageResource(services.get(position).getIcon());
@@ -88,7 +88,7 @@ public class ThirdPageAdapter extends RecyclerView.Adapter<ThirdPageAdapter.View
         void onItemClick(String name, int position);
     }
 
-    private static  int confirmation(int thMax, int thNecessary){
+    private static  int confirmation(double thMax, int thNecessary){
         if(thMax > thNecessary ){
             return 0;
         } else if (thMax < thNecessary){
