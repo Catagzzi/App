@@ -14,6 +14,7 @@ import com.example.memoria.activities.UsersMeasureActivity;
 import com.example.memoria.activities.services;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class ThirdPageAdapter extends RecyclerView.Adapter<ThirdPageAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(names.get(position), thMax.get(position), services, positions[position]);
+        holder.bind(names, thMax, services, positions, position);
     }
 
     @Override
@@ -69,12 +70,12 @@ public class ThirdPageAdapter extends RecyclerView.Adapter<ThirdPageAdapter.View
 
         }
 
-        public void bind(final String name, final double thMax,  List<services> services, int position){
-            this.textViewName.setText(name);
-            this.serviceName.setText(services.get(position).getName());
-            this.serviceIcon.setImageResource(services.get(position).getIcon());
+        public void bind( List<String> names, List<Double> thMax,  List<services> services, int[] position, int spinner){
+            this.textViewName.setText(names.get(spinner));
+            this.serviceName.setText(services.get(position[spinner]).getName());
+            this.serviceIcon.setImageResource(services.get(position[spinner]).getIcon());
             this.verificationIcon.setImageResource(R.drawable.waiting);
-            int throughputRelation = confirmation(thMax, services.get(position).throughput);
+            int throughputRelation = state(thMax,services,position);
             if (throughputRelation == 0){
                 verificationIcon.setImageResource(R.drawable.check);
             }else if (throughputRelation ==1){
@@ -85,17 +86,26 @@ public class ThirdPageAdapter extends RecyclerView.Adapter<ThirdPageAdapter.View
     }
 
     public interface OnItemClickListener{
-        void onItemClick(String name, int position);
+        void onItemClick(String name, double position);
     }
 
-    private static  int confirmation(double thMax, int thNecessary){
-        if(thMax > thNecessary ){
-            return 0;
-        } else if (thMax < thNecessary){
-            return 1;
-        } else{
-            return 2;
+
+    private static  int state( List<Double> thMax,  List<services> services, int[] position){
+        int ok = 0;
+        List<Double> listThNec = new ArrayList<Double>();
+        for (int i=0; i<thMax.size(); i++ ){
+            double thNec = services.get(position[i]).throughput;
+            listThNec.add(thNec);
         }
+        double finalPercentage = 0;
+        for (int i=0; i<thMax.size(); i++ ){
+            double percentage = (listThNec.get(i)/thMax.get(i))*100.0;
+            finalPercentage = finalPercentage + percentage;
+        }
+        if (finalPercentage > 100.0){
+            ok = 1;
+        }
+        return ok;
     }
 
 }

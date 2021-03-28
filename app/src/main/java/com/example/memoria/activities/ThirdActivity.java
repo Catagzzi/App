@@ -1,4 +1,4 @@
-package com.example.memoria.activities;
+    package com.example.memoria.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,6 +52,7 @@ public class ThirdActivity extends AppCompatActivity {
                 ConnectivityManager cm = (ConnectivityManager) ThirdActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
                 final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
+                //Cambiar a TYPE_WIFI
                 if (activeNetwork != null) {
                     Boolean Mobile = activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
                     if(Mobile == true) {

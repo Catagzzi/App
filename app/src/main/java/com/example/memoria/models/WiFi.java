@@ -41,7 +41,6 @@ public class WiFi extends RealmObject {
         this.frequency = 0;
         this.wifiRSSI = 0;
         this.latency = 0.0;
-        //this.packages = "";
     }
 
     public String getId() {

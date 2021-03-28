@@ -54,10 +54,10 @@ public class FirstAnalysisActivityII extends AppCompatActivity {
 
     private List<services> getAllServices(){
         return new ArrayList<services>(){{
-            add(new services("Netflix", 1.5, R.drawable.netflix));
-            add(new services("Zoom", 1080, R.drawable.zoom));
-            add(new services("Instagram", 200, R.drawable.instagram));
-            add(new services("Facebook", 200, R.drawable.facebook));
+            add(new services("Netflix", 35, R.drawable.netflix));
+            add(new services("Zoom", 40, R.drawable.zoom));
+            add(new services("Instagram", 20, R.drawable.instagram));
+            add(new services("Facebook", 20, R.drawable.facebook));
         }};
 
     }
